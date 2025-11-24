@@ -3,68 +3,51 @@ const Note = require('../models/note')
 
 // http://localhost:3001/api/notes
 // 获取所有笔记
-notesRouter.get('/', (request, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes)
-  })
+notesRouter.get('/', async (request, response) => {
+  const notes = await Note.find({})
+  response.json(notes)
 })
 
-// http://localhost:3001/api/notes/1
+// http://localhost:3001/api/notes/:id
 // 获取单条笔记
-notesRouter.get('/:id', (request, response, next) => {
-  Note.findById(request.params.id)
-    .then(note => {
-      if (note) {
-        response.json(note)
-      } else {
-        response.status(404).end()
-      }
-    })
-    .catch(error => next(error))
+notesRouter.get('/:id', async (request, response, next) => {
+  const note = await Note.findById(request.params.id)
+  if (note) {
+    response.json(note)
+  } else {
+    response.status(404).end()
+  } 
 })
 
-// http://localhost:3001/api/notes/2
+// http://localhost:3001/api/notes/:id
 // 删除单条笔记
-notesRouter.delete('/:id', (request, response, next) => {
-  Note.findByIdAndDelete(request.params.id)
-    .then(() => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
+notesRouter.delete('/:id', async (request, response, next) => {
+  await Note.findByIdAndDelete(request.params.id)
+  response.status(204).end()
 })
 
 // http://localhost:3001/api/notes
 // 创建新笔记
-notesRouter.post('/', (request, response, next) => {
+notesRouter.post('/', async (request, response, next) => {
   const body = request.body
-  if (!body.content) {
-    return response.status(400).json({
-      error: 'content missing'
-    })
-  }
   const note = new Note({
     content: body.content,
     important: body.important || false,
   })
-  note.save().then(savedNote => {
-    response.json(savedNote)
-  })
-  .catch(error => next(error))
+  const savedNote = await note.save()
+  response.status(201).json(savedNote)
 })
 
-// http://localhost:3001/api/notes/2
+// http://localhost:3001/api/notes/:id
 // 更新单条笔记
-notesRouter.put('/:id', (request, response, next) => {
+notesRouter.put('/:id', async (request, response, next) => {
   const body = request.body
   const note = {
     content: body.content,
     important: body.important,
   }
-  Note.findByIdAndUpdate(request.params.id, note, { new: true })
-    .then(updatedNote => {
-      response.json(updatedNote)
-    })
-    .catch(error => next(error))
+  const updatedNote = await Note.findByIdAndUpdate(request.params.id, note, { new: true })
+  response.json(updatedNote)
 })
 
 module.exports = notesRouter
