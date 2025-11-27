@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InhpYW93dSIsImlkIjoiNjkyNDg0NjM0ZDQ0OGQ3YmRlNjAyZDM2IiwiaWF0IjoxNzY0MTQ1OTIwfQ.bzUni3ufFdpfOTE_GM-C82LJKwYZHCAV4xQHwuZIv5M
+
+{
+  "content": "xiaowu use token based auth",
+  "important": true,
+  "userId": "692469244a7daed6052a7b4e"
+}
